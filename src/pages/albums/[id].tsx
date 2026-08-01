@@ -66,10 +66,13 @@ export default function AlbumPage() {
 
   const loadAlbum = async () => {
     try {
+      const albumId = Array.isArray(id) ? id[0] : id;
+      if (!albumId) return;
+
       const { data: albumData, error: albumError } = await supabase
         .from("albums")
         .select("*")
-        .eq("id", id)
+        .eq("id", albumId)
         .single();
 
       if (albumError) throw albumError;
@@ -77,7 +80,7 @@ export default function AlbumPage() {
       const { data: songsData } = await supabase
         .from("album_songs")
         .select("id, song_id, position, songs(id, title)")
-        .eq("album_id", id)
+        .eq("album_id", albumId)
         .order("position");
 
       setAlbum(albumData);

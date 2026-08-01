@@ -62,10 +62,13 @@ export default function SongPage() {
 
   const loadSong = async () => {
     try {
+      const songId = Array.isArray(id) ? id[0] : id;
+      if (!songId) return;
+
       const { data, error } = await supabase
         .from("songs")
         .select("*")
-        .eq("id", id)
+        .eq("id", songId)
         .single();
 
       if (error) throw error;
