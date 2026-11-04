@@ -115,11 +115,11 @@ export default function SongPage() {
       let coverUrl = song.cover_art_url;
 
       if (mp3File) {
-        mp3Url = await uploadFile(mp3File, "audio", `${user.id}/${song.id}/audio.mp3`);
+        mp3Url = await uploadFile(mp3File, "song-files", `${user.id}/${song.id}/audio.mp3`);
       }
 
       if (videoFile) {
-        videoUrl = await uploadFile(videoFile, "videos", `${user.id}/${song.id}/video.mp4`);
+        videoUrl = await uploadFile(videoFile, "video-files", `${user.id}/${song.id}/video.mp4`);
       }
 
       if (coverFile) {
