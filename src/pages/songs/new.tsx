@@ -57,11 +57,11 @@ export default function NewSongPage() {
       let coverUrl = null;
 
       if (mp3File) {
-        mp3Url = await uploadFile(mp3File, "audio", `${user.id}/${songId}/audio.mp3`);
+        mp3Url = await uploadFile(mp3File, "song-files", `${user.id}/${songId}/audio.mp3`);
       }
 
       if (videoFile) {
-        videoUrl = await uploadFile(videoFile, "videos", `${user.id}/${songId}/video.mp4`);
+        videoUrl = await uploadFile(videoFile, "video-files", `${user.id}/${songId}/video.mp4`);
       }
 
       if (coverFile) {
