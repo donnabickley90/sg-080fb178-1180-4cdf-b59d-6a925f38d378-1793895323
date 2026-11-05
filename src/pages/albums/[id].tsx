@@ -328,11 +328,12 @@ export default function AlbumPage() {
           <div className="space-y-2">
             <Label>Cover Art</Label>
             {album.cover_art_url && (
-              <div className="flex items-center gap-2 p-2 bg-secondary rounded text-sm mb-2">
-                <ImageIcon className="h-4 w-4 text-primary" />
-                <a href={album.cover_art_url} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline flex-1 truncate">
-                  Current cover
-                </a>
+              <div className="mb-4">
+                <img 
+                  src={album.cover_art_url} 
+                  alt={`${album.title} cover`}
+                  className="w-full max-w-xs rounded-lg shadow-lg"
+                />
               </div>
             )}
             <Input
@@ -341,6 +342,9 @@ export default function AlbumPage() {
               onChange={(e) => setCoverFile(e.target.files?.[0] ?? null)}
               className="bg-secondary"
             />
+            {coverFile && (
+              <p className="text-xs text-muted-foreground">Selected: {coverFile.name}</p>
+            )}
           </div>
 
           <div className="flex gap-3 pt-4">

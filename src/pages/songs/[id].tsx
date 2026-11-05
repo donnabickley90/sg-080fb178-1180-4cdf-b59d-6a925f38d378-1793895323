@@ -226,6 +226,58 @@ export default function SongPage() {
         </Button>
       </div>
 
+      {(song.mp3_url || song.video_url || song.cover_art_url) && (
+        <Card className="shadow-[0_0_15px_rgba(139,92,246,0.15)]">
+          <CardHeader>
+            <CardTitle>Media</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {song.cover_art_url && (
+              <div className="space-y-2">
+                <Label>Cover Art</Label>
+                <img 
+                  src={song.cover_art_url} 
+                  alt={`${song.title} cover`}
+                  className="w-full max-w-sm rounded-lg shadow-lg"
+                />
+              </div>
+            )}
+
+            {song.mp3_url && (
+              <div className="space-y-2">
+                <Label className="flex items-center gap-2">
+                  <Music className="h-4 w-4" />
+                  Audio Player
+                </Label>
+                <audio 
+                  controls 
+                  className="w-full"
+                  src={song.mp3_url}
+                >
+                  Your browser does not support the audio element.
+                </audio>
+              </div>
+            )}
+
+            {song.video_url && (
+              <div className="space-y-2">
+                <Label className="flex items-center gap-2">
+                  <Video className="h-4 w-4" />
+                  Video Player
+                </Label>
+                <video 
+                  controls 
+                  className="w-full rounded-lg shadow-lg"
+                  src={song.video_url}
+                >
+                  Your browser does not support the video element.
+                </video>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
       <Card className="shadow-[0_0_15px_rgba(139,92,246,0.15)]">
         <CardHeader>
           <CardTitle>Song Details</CardTitle>
@@ -289,61 +341,46 @@ export default function SongPage() {
           </div>
 
           <div className="space-y-4">
-            <h3 className="font-semibold">Files</h3>
+            <h3 className="font-semibold">Upload New Files</h3>
             
             <div className="grid gap-6 md:grid-cols-3">
               <div className="space-y-2">
                 <Label>MP3 File</Label>
-                {song.mp3_url && (
-                  <div className="flex items-center gap-2 p-2 bg-secondary rounded text-sm mb-2">
-                    <Music className="h-4 w-4 text-primary" />
-                    <a href={song.mp3_url} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline flex-1 truncate">
-                      Current file
-                    </a>
-                  </div>
-                )}
                 <Input
                   type="file"
                   accept="audio/mpeg,audio/mp3"
                   onChange={(e) => setMp3File(e.target.files?.[0] ?? null)}
                   className="bg-secondary"
                 />
+                {mp3File && (
+                  <p className="text-xs text-muted-foreground">Selected: {mp3File.name}</p>
+                )}
               </div>
 
               <div className="space-y-2">
                 <Label>Video File</Label>
-                {song.video_url && (
-                  <div className="flex items-center gap-2 p-2 bg-secondary rounded text-sm mb-2">
-                    <Video className="h-4 w-4 text-primary" />
-                    <a href={song.video_url} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline flex-1 truncate">
-                      Current file
-                    </a>
-                  </div>
-                )}
                 <Input
                   type="file"
                   accept="video/mp4,video/quicktime"
                   onChange={(e) => setVideoFile(e.target.files?.[0] ?? null)}
                   className="bg-secondary"
                 />
+                {videoFile && (
+                  <p className="text-xs text-muted-foreground">Selected: {videoFile.name}</p>
+                )}
               </div>
 
               <div className="space-y-2">
                 <Label>Cover Art</Label>
-                {song.cover_art_url && (
-                  <div className="flex items-center gap-2 p-2 bg-secondary rounded text-sm mb-2">
-                    <ImageIcon className="h-4 w-4 text-primary" />
-                    <a href={song.cover_art_url} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline flex-1 truncate">
-                      Current file
-                    </a>
-                  </div>
-                )}
                 <Input
                   type="file"
                   accept="image/jpeg,image/jpg,image/png"
                   onChange={(e) => setCoverFile(e.target.files?.[0] ?? null)}
                   className="bg-secondary"
                 />
+                {coverFile && (
+                  <p className="text-xs text-muted-foreground">Selected: {coverFile.name}</p>
+                )}
               </div>
             </div>
           </div>
