@@ -15,6 +15,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      albums: {
+        Row: {
+          artist: string | null
+          cover_art_url: string | null
+          created_at: string | null
+          id: string
+          title: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          artist?: string | null
+          cover_art_url?: string | null
+          created_at?: string | null
+          id?: string
+          title: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          artist?: string | null
+          cover_art_url?: string | null
+          created_at?: string | null
+          id?: string
+          title?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -41,6 +71,56 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      songs: {
+        Row: {
+          album_id: string | null
+          artist: string | null
+          cover_art_url: string | null
+          created_at: string | null
+          duration: number | null
+          file_url: string | null
+          id: string
+          title: string
+          updated_at: string | null
+          user_id: string
+          video_url: string | null
+        }
+        Insert: {
+          album_id?: string | null
+          artist?: string | null
+          cover_art_url?: string | null
+          created_at?: string | null
+          duration?: number | null
+          file_url?: string | null
+          id?: string
+          title: string
+          updated_at?: string | null
+          user_id: string
+          video_url?: string | null
+        }
+        Update: {
+          album_id?: string | null
+          artist?: string | null
+          cover_art_url?: string | null
+          created_at?: string | null
+          duration?: number | null
+          file_url?: string | null
+          id?: string
+          title?: string
+          updated_at?: string | null
+          user_id?: string
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "songs_album_id_fkey"
+            columns: ["album_id"]
+            isOneToOne: false
+            referencedRelation: "albums"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
