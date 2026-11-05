@@ -29,12 +29,8 @@ interface Album {
 
 interface AlbumSong {
   id: string;
-  song_id: string;
-  position: number;
-  songs: {
-    id: string;
-    title: string;
-  };
+  title: string;
+  artist: string | null;
 }
 
 interface AvailableSong {
@@ -78,10 +74,10 @@ export default function AlbumPage() {
       if (albumError) throw albumError;
 
       const { data: songsData } = await supabase
-        .from("album_songs")
-        .select("id, song_id, position, songs(id, title)")
+        .from("songs")
+        .select("id, title, artist")
         .eq("album_id", albumId)
-        .order("position");
+        .order("title");
 
       setAlbum(albumData);
       setTitle(albumData.title);
@@ -102,6 +98,7 @@ export default function AlbumPage() {
     const { data } = await supabase
       .from("songs")
       .select("id, title")
+      .is("album_id", null)
       .order("title");
     setAvailableSongs(data ?? []);
   };
@@ -157,18 +154,16 @@ export default function AlbumPage() {
     if (!selectedSongId || !album) return;
 
     try {
-      const maxPosition = Math.max(...albumSongs.map((s) => s.position), -1);
-
-      const { error } = await supabase.from("album_songs").insert({
-        album_id: album.id,
-        song_id: selectedSongId,
-        position: maxPosition + 1,
-      });
+      const { error } = await supabase
+        .from("songs")
+        .update({ album_id: album.id })
+        .eq("id", selectedSongId);
 
       if (error) throw error;
 
       setSelectedSongId("");
       loadAlbum();
+      loadAvailableSongs();
 
       toast({
         title: "Song added",
@@ -183,16 +178,17 @@ export default function AlbumPage() {
     }
   };
 
-  const handleRemoveSong = async (albumSongId: string) => {
+  const handleRemoveSong = async (songId: string) => {
     try {
       const { error } = await supabase
-        .from("album_songs")
-        .delete()
-        .eq("id", albumSongId);
+        .from("songs")
+        .update({ album_id: null })
+        .eq("id", songId);
 
       if (error) throw error;
 
       loadAlbum();
+      loadAvailableSongs();
 
       toast({
         title: "Song removed",
@@ -287,7 +283,7 @@ export default function AlbumPage() {
     );
   }
 
-  const songsInAlbum = new Set(albumSongs.map((as) => as.song_id));
+  const songsInAlbum = new Set(albumSongs.map((s) => s.id));
   const filteredAvailableSongs = availableSongs.filter((s) => !songsInAlbum.has(s.id));
 
   return (
@@ -390,45 +386,23 @@ export default function AlbumPage() {
             </div>
           ) : (
             <div className="space-y-2">
-              {albumSongs.map((albumSong, index) => (
+              {albumSongs.map((song, index) => (
                 <div
-                  key={albumSong.id}
+                  key={song.id}
                   className="flex items-center gap-3 p-3 rounded-lg bg-secondary/50 border border-border"
                 >
-                  <div className="flex flex-col gap-1">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-6 w-6"
-                      onClick={() => movePosition(index, "up")}
-                      disabled={index === 0}
-                    >
-                      <GripVertical className="h-4 w-4" />
-                    </Button>
-                  </div>
                   <span className="text-sm text-muted-foreground w-8">{index + 1}.</span>
-                  <Link href={`/songs/${albumSong.song_id}`} className="flex-1 hover:text-primary transition-colors">
-                    {albumSong.songs.title}
+                  <Link href={`/songs/${song.id}`} className="flex-1 hover:text-primary transition-colors">
+                    {song.title}
                   </Link>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => movePosition(index, "down")}
-                      disabled={index === albumSongs.length - 1}
-                    >
-                      ↓
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-destructive hover:text-destructive"
-                      onClick={() => handleRemoveSong(albumSong.id)}
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-destructive hover:text-destructive"
+                    onClick={() => handleRemoveSong(song.id)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
                 </div>
               ))}
             </div>
