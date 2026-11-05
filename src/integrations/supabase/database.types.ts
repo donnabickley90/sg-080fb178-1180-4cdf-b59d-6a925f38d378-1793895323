@@ -81,6 +81,7 @@ export type Database = {
           duration: number | null
           file_url: string | null
           id: string
+          status: string | null
           title: string
           updated_at: string | null
           user_id: string
@@ -94,6 +95,7 @@ export type Database = {
           duration?: number | null
           file_url?: string | null
           id?: string
+          status?: string | null
           title: string
           updated_at?: string | null
           user_id: string
@@ -107,6 +109,7 @@ export type Database = {
           duration?: number | null
           file_url?: string | null
           id?: string
+          status?: string | null
           title?: string
           updated_at?: string | null
           user_id?: string

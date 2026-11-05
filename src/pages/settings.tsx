@@ -31,16 +31,11 @@ export default function SettingsPage() {
         .from("albums")
         .select("*");
 
-      const { data: albumSongs } = await supabase
-        .from("album_songs")
-        .select("*");
-
       const exportData = {
         version: "1.0",
         exportDate: new Date().toISOString(),
         songs: songs ?? [],
         albums: albums ?? [],
-        albumSongs: albumSongs ?? [],
       };
 
       const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
@@ -80,7 +75,7 @@ export default function SettingsPage() {
         const text = await file.text();
         const data = JSON.parse(text);
 
-        if (!data.version || !data.songs || !data.albums || !data.albumSongs) {
+        if (!data.version || !data.songs || !data.albums) {
           throw new Error("Invalid backup file format");
         }
 
@@ -92,11 +87,7 @@ export default function SettingsPage() {
           .from("albums")
           .upsert(data.albums, { onConflict: "id" });
 
-        const { error: albumSongsError } = await supabase
-          .from("album_songs")
-          .upsert(data.albumSongs, { onConflict: "id" });
-
-        if (songsError || albumsError || albumSongsError) {
+        if (songsError || albumsError) {
           throw new Error("Failed to restore data");
         }
 
