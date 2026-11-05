@@ -35,7 +35,7 @@ export default function NewAlbumPage() {
       let coverUrl = null;
 
       if (coverFile) {
-        coverUrl = await uploadFile(coverFile, "cover-art", `${user.id}/albums/${albumId}/cover.jpg`);
+        coverUrl = await uploadFile(coverFile, "album-covers", `${user.id}/albums/${albumId}/cover.jpg`);
       }
 
       const { error } = await supabase.from("albums").insert({
