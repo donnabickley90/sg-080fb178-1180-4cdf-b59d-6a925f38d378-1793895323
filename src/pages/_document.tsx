@@ -7,6 +7,16 @@ export default function Document() {
     <Html lang="en">
       <Head>
         <SEOElements />
+        
+        {/* PWA Manifest */}
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="application-name" content="SO Vault" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="SO Vault" />
+        <link rel="apple-touch-icon" href="/file_00000000cb3081fabd661d7d4024ae0a.png" />
+        <meta name="theme-color" content="#ec4899" />
+        
         {/*
           CRITICAL: DO NOT REMOVE THIS SCRIPT
           The Softgen AI monitoring script is essential for core app functionality.
