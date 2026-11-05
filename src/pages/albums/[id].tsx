@@ -18,8 +18,9 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Save, Trash2, Plus, X, GripVertical, Disc3, Image as ImageIcon } from "lucide-react";
+import { ArrowLeft, Save, Trash2, Plus, X, Disc3, Play } from "lucide-react";
 import Link from "next/link";
+import { FloatingAudioPlayer } from "@/components/FloatingAudioPlayer";
 
 interface Album {
   id: string;
@@ -31,6 +32,7 @@ interface AlbumSong {
   id: string;
   title: string;
   artist: string | null;
+  mp3_url: string | null;
 }
 
 interface AvailableSong {
@@ -52,6 +54,7 @@ export default function AlbumPage() {
   const [saving, setSaving] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [coverFile, setCoverFile] = useState<File | null>(null);
+  const [currentSongIndex, setCurrentSongIndex] = useState<number | null>(null);
 
   useEffect(() => {
     if (user && id) {
@@ -75,7 +78,7 @@ export default function AlbumPage() {
 
       const { data: songsData } = await supabase
         .from("songs")
-        .select("id, title, artist")
+        .select("id, title, artist, mp3_url")
         .eq("album_id", albumId)
         .order("title");
 
@@ -251,7 +254,7 @@ export default function AlbumPage() {
   const filteredAvailableSongs = availableSongs.filter((s) => !songsInAlbum.has(s.id));
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
+    <div className="space-y-6 max-w-4xl mx-auto pb-32">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link href="/albums">
@@ -356,6 +359,15 @@ export default function AlbumPage() {
                   className="flex items-center gap-3 p-3 rounded-lg bg-secondary/50 border border-border"
                 >
                   <span className="text-sm text-muted-foreground w-8">{index + 1}.</span>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 shrink-0"
+                    onClick={() => setCurrentSongIndex(index)}
+                    disabled={!song.mp3_url}
+                  >
+                    <Play className="h-4 w-4" />
+                  </Button>
                   <Link href={`/songs/${song.id}`} className="flex-1 hover:text-primary transition-colors">
                     {song.title}
                   </Link>
@@ -373,6 +385,15 @@ export default function AlbumPage() {
           )}
         </CardContent>
       </Card>
+
+      {currentSongIndex !== null && albumSongs.length > 0 && (
+        <FloatingAudioPlayer
+          playlist={albumSongs}
+          currentIndex={currentSongIndex}
+          onClose={() => setCurrentSongIndex(null)}
+          onSongChange={setCurrentSongIndex}
+        />
+      )}
 
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>

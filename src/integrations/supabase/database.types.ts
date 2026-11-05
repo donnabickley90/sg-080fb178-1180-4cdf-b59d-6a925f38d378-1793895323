@@ -81,6 +81,8 @@ export type Database = {
           duration: number | null
           file_url: string | null
           id: string
+          lyrics: string | null
+          mp3_url: string | null
           status: string | null
           title: string
           updated_at: string | null
@@ -95,6 +97,8 @@ export type Database = {
           duration?: number | null
           file_url?: string | null
           id?: string
+          lyrics?: string | null
+          mp3_url?: string | null
           status?: string | null
           title: string
           updated_at?: string | null
@@ -109,6 +113,8 @@ export type Database = {
           duration?: number | null
           file_url?: string | null
           id?: string
+          lyrics?: string | null
+          mp3_url?: string | null
           status?: string | null
           title?: string
           updated_at?: string | null
