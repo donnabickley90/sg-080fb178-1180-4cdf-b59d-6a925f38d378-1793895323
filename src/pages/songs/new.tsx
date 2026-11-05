@@ -65,7 +65,7 @@ export default function NewSongPage() {
       }
 
       if (coverFile) {
-        coverUrl = await uploadFile(coverFile, "cover-art", `${user.id}/${songId}/cover.jpg`);
+        coverUrl = await uploadFile(coverFile, "song-covers", `${user.id}/${songId}/cover.jpg`);
       }
 
       const { error } = await supabase.from("songs").insert({
