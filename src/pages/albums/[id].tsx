@@ -203,42 +203,6 @@ export default function AlbumPage() {
     }
   };
 
-  const movePosition = async (index: number, direction: "up" | "down") => {
-    if (
-      (direction === "up" && index === 0) ||
-      (direction === "down" && index === albumSongs.length - 1)
-    ) {
-      return;
-    }
-
-    const newIndex = direction === "up" ? index - 1 : index + 1;
-    const newSongs = [...albumSongs];
-    [newSongs[index], newSongs[newIndex]] = [newSongs[newIndex], newSongs[index]];
-
-    setAlbumSongs(newSongs);
-
-    try {
-      const updates = newSongs.map((song, idx) => ({
-        id: song.id,
-        position: idx,
-      }));
-
-      for (const update of updates) {
-        await supabase
-          .from("album_songs")
-          .update({ position: update.position })
-          .eq("id", update.id);
-      }
-    } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error.message,
-      });
-      loadAlbum();
-    }
-  };
-
   const handleDelete = async () => {
     if (!album) return;
 
