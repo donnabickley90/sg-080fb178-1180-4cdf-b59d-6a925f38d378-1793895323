@@ -123,7 +123,7 @@ export default function SongPage() {
       }
 
       if (coverFile) {
-        coverUrl = await uploadFile(coverFile, "cover-art", `${user.id}/${song.id}/cover.jpg`);
+        coverUrl = await uploadFile(coverFile, "song-covers", `${user.id}/${song.id}/cover.jpg`);
       }
 
       const { error } = await supabase
