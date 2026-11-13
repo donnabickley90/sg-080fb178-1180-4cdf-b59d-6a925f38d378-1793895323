@@ -76,6 +76,14 @@ export default function AlbumPage() {
 
       if (albumError) throw albumError;
 
+      // Transform storage path to public URL if needed
+      if (albumData.cover_art_url && !albumData.cover_art_url.startsWith('http')) {
+        const { data: urlData } = supabase.storage
+          .from('album-covers')
+          .getPublicUrl(albumData.cover_art_url);
+        albumData.cover_art_url = urlData.publicUrl;
+      }
+
       const { data: songsData } = await supabase
         .from("songs")
         .select("id, title, artist, mp3_url")
