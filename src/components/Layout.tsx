@@ -47,17 +47,17 @@ export function Layout({ children }: LayoutProps) {
       <div className="min-h-screen flex flex-col md:flex-row">
         {/* Mobile Header */}
         <header className={cn("sticky top-0 z-50 bg-card border-b border-border", mobileView ? "block" : "md:hidden")}>
-          <div className="flex items-center justify-between p-4">
-            <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+          <div className={cn("flex items-center justify-between", mobileView ? "px-3 py-2.5" : "p-4")}>
+            <h1 className={cn("font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent", mobileView ? "text-lg" : "text-xl")}>
               Sweet Obedience Vault
             </h1>
             <Button
               variant="ghost"
               size="icon"
               onClick={handleSignOut}
-              className="text-muted-foreground hover:text-foreground"
+              className={cn("text-muted-foreground hover:text-foreground", mobileView ? "h-8 w-8" : "")}
             >
-              <LogOut className="h-5 w-5" />
+              <LogOut className={cn(mobileView ? "h-4 w-4" : "h-5 w-5")} />
             </Button>
           </div>
         </header>
@@ -112,12 +112,12 @@ export function Layout({ children }: LayoutProps) {
 
         {/* Main Content */}
         <main className="flex-1 overflow-auto">
-          <div className="container py-6 md:py-8">{children}</div>
+          <div className={cn("container", mobileView ? "py-3 px-3" : "py-6 md:py-8")}>{children}</div>
         </main>
 
         {/* Mobile Bottom Navigation */}
         <nav className={cn("sticky bottom-0 z-50 bg-card border-t border-border", mobileView ? "block" : "md:hidden")}>
-          <div className="flex items-center justify-around p-2">
+          <div className={cn("flex items-center justify-around", mobileView ? "px-2 py-1.5" : "p-2")}>
             {navigation.map((item) => {
               const Icon = item.icon;
               const isActive = router.pathname === item.href;
@@ -126,14 +126,15 @@ export function Layout({ children }: LayoutProps) {
                   key={item.name}
                   href={item.href}
                   className={cn(
-                    "flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-colors",
+                    "flex flex-col items-center gap-0.5 rounded-lg transition-colors min-w-[60px]",
+                    mobileView ? "px-2 py-1.5" : "px-3 py-2",
                     isActive
                       ? "text-primary"
                       : "text-muted-foreground"
                   )}
                 >
-                  <Icon className="h-5 w-5" />
-                  <span className="text-xs font-medium">{item.name}</span>
+                  <Icon className={cn(mobileView ? "h-5 w-5" : "h-5 w-5")} />
+                  <span className={cn("font-medium", mobileView ? "text-[10px]" : "text-xs")}>{item.name}</span>
                 </Link>
               );
             })}
