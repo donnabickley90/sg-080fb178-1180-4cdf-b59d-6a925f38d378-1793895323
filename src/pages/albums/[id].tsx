@@ -121,7 +121,7 @@ export default function AlbumPage() {
       let coverUrl = album.cover_art_url;
 
       if (coverFile) {
-        coverUrl = await uploadFile(coverFile, "cover-art", `${user.id}/albums/${album.id}/cover.jpg`);
+        coverUrl = await uploadFile(coverFile, "album-covers", `${user.id}/albums/${album.id}/cover.jpg`);
       }
 
       const { error } = await supabase
