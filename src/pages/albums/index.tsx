@@ -37,7 +37,19 @@ export default function AlbumsPage() {
         .select("id, title, cover_art_url")
         .order("created_at", { ascending: false });
 
-      setAlbums(data ?? []);
+      // Transform storage paths to public URLs
+      const albumsWithUrls = (data ?? []).map(album => {
+        if (album.cover_art_url && !album.cover_art_url.startsWith('http')) {
+          // It's a storage path, convert to public URL
+          const { data: urlData } = supabase.storage
+            .from('album-covers')
+            .getPublicUrl(album.cover_art_url);
+          return { ...album, cover_art_url: urlData.publicUrl };
+        }
+        return album;
+      });
+
+      setAlbums(albumsWithUrls);
     } catch (error) {
       console.error("Error loading albums:", error);
     } finally {
