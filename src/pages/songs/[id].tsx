@@ -73,6 +73,26 @@ export default function SongPage() {
 
       if (error) throw error;
 
+      // Transform storage paths to public URLs if needed
+      if (data.cover_art_url && !data.cover_art_url.startsWith('http')) {
+        const { data: urlData } = supabase.storage
+          .from('song-covers')
+          .getPublicUrl(data.cover_art_url);
+        data.cover_art_url = urlData.publicUrl;
+      }
+      if (data.mp3_url && !data.mp3_url.startsWith('http')) {
+        const { data: urlData } = supabase.storage
+          .from('song-files')
+          .getPublicUrl(data.mp3_url);
+        data.mp3_url = urlData.publicUrl;
+      }
+      if (data.video_url && !data.video_url.startsWith('http')) {
+        const { data: urlData } = supabase.storage
+          .from('video-files')
+          .getPublicUrl(data.video_url);
+        data.video_url = urlData.publicUrl;
+      }
+
       setSong(data);
       setTitle(data.title);
       setLyrics(data.lyrics ?? "");
